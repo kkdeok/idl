@@ -13,6 +13,10 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROTO_ROOT="${ROOT_DIR}/proto"
 GEN_DIR="${ROOT_DIR}/gen"
 
+# Docker 컨테이너 내부에서 마운트된 디렉토리의 소유권 문제 해결
+git config --global --add safe.directory "${ROOT_DIR}" 2>/dev/null || true
+git config --global --add safe.directory /workspace 2>/dev/null || true
+
 # 전체 서비스 목록 가져오기
 list_all_services() {
   local SERV_DIR="${PROTO_ROOT}/services"

@@ -48,9 +48,14 @@ list_all_services() {
 }
 
 # 컨테이너 안에서 git 설정
-git config user.name "kkdeok" || true
-git config user.email "kkdeok26@gmail.com" || true
-git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" || true
+# Docker 컨테이너 내부에서 마운트된 디렉토리의 소유권 문제 해결
+git config --global --add safe.directory /workspace || true
+
+# GITHUB_TOKEN이 있고 GITHUB_REPOSITORY가 설정된 경우에만 remote URL 변경
+# (CI 환경에서만 필요, 로컬에서는 기존 설정 유지)
+if [[ -n "${GITHUB_TOKEN}" && -n "${GITHUB_REPOSITORY}" ]]; then
+  git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" || true
+fi
 
 # 변경된 서비스 목록 가져오기
 if [[ "${ALL_FLAG}" == "true" ]]; then
