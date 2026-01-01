@@ -26,7 +26,7 @@ gen:
 
 # ===== CI command (run inside Docker) =====
 publish:
-	@$(RUN_IDL) bash -lc "chmod +x scripts/*.sh && ./scripts/release.sh"
+	@$(RUN_IDL) bash -lc "chmod +x scripts/*.sh && ./scripts/publish.sh"
 
 publish-all:
-	@$(RUN_IDL) bash -lc "chmod +x scripts/*.sh && ./scripts/release.sh --all"
+	@$(RUN_IDL) bash -lc "chmod +x scripts/*.sh && ./scripts/publish.sh --all"
