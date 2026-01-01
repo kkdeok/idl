@@ -119,11 +119,27 @@ for SERVICE in ${SERVICES}; do
   <packaging>jar</packaging>
 
   <properties>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <grpc.version>1.68.0</grpc.version>
     <protobuf.version>4.28.2</protobuf.version>
+    <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>\${maven.compiler.plugin.version}</version>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
