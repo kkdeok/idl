@@ -21,6 +21,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Verify Docker installation
+        run: |
+          docker --version
+          docker compose version || docker-compose --version
+
       - name: Build Docker image
         run: |
           docker compose -f docker/docker-compose.yml build
@@ -62,4 +67,4 @@ jobs:
             -e GITHUB_ACTOR="${GITHUB_ACTOR}" \
             -v "${PWD}/.m2:/root/.m2" \
             idl \
-            bash -c "chmod +x scripts/*.sh && make publish-all"
+            bash -c "chmod +x scripts/*.sh && ./scripts/release.sh --all"
