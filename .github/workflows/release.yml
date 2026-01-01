@@ -55,4 +55,4 @@ jobs:
             -e GITHUB_TOKEN="${GITHUB_TOKEN}" \
             -v "$PWD/.m2:/root/.m2" \
             idl \
-            bash -lc "chmod +x scripts/*.sh && ./scripts/ci_release.sh"
+            bash -c "cd /workspace && chmod +x scripts/*.sh && ./scripts/ci_release.sh"
