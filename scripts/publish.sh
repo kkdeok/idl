@@ -123,7 +123,7 @@ for SERVICE in ${SERVICES}; do
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <grpc.version>1.68.0</grpc.version>
-    <protobuf.version>4.28.2</protobuf.version>
+    <protobuf.version>3.25.3</protobuf.version>
     <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
   </properties>
 
@@ -156,6 +156,11 @@ for SERVICE in ${SERVICES}; do
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
       <version>\${protobuf.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>1.3.2</version>
     </dependency>
   </dependencies>
 
