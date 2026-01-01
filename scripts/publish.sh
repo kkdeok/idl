@@ -5,14 +5,18 @@ set -euo pipefail
 # java는 github packages로 배포하고, golang은 tags로 배포한다.
 # --all 플래그가 있으면 전체 서비스 배포
 
-: "${GITHUB_TOKEN:?GITHUB_TOKEN is required for pushing tags and publishing packages}"
-
 BASE_SHA="${BASE_SHA:-}"
 HEAD_SHA="${HEAD_SHA:-HEAD}"
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-}"
+GITHUB_ACTOR="${GITHUB_ACTOR:-}"
 
 if [[ -z "${GITHUB_REPOSITORY}" ]]; then
   echo "ERROR: GITHUB_REPOSITORY is required" >&2
+  exit 1
+fi
+
+if [[ -z "${GITHUB_TOKEN}" ]]; then
+  echo "ERROR: GITHUB_TOKEN is required" >&2
   exit 1
 fi
 

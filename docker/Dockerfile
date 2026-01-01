@@ -3,9 +3,12 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
-    ca-certificates curl git make unzip \
+    ca-certificates \
+    curl \
+    git \
     protobuf-compiler \
-    openjdk-17-jdk maven \
+    openjdk-17-jdk-headless \
+    maven \
     && rm -rf /var/lib/apt/lists/*
 
 # Go
