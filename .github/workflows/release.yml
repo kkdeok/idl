@@ -29,7 +29,9 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd "${{ github.workspace }}"
+          # 현재 디렉토리 확인 (디버깅)
+          pwd
+          ls -la docker/docker-compose.yml || (echo "File not found. Listing docker directory:" && ls -la docker/ || echo "docker directory not found")
           
           # git tagging/push needs auth
           git config user.name "idl-ci"
