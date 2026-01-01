@@ -1,28 +1,32 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-help:
-	@echo "Targets:"
-	@echo "  make gen            - Generate Go+Java for ALL services (recommended)"
-	@echo "  make gen-changed    - Generate for locally changed services"
-	@echo ""
-	@echo "Tip: commit gen/ with your proto changes."
+.PHONY: help docker-build docker-shell gen gen-changed release
 
+DOCKER_COMPOSE := docker compose -f docker/docker-compose.yml
+RUN_IDL := $(DOCKER_COMPOSE) run --rm idl
+
+help:
+	@echo "Targets (Docker-only):"
+	@echo "  make docker-build   - Build the dev image"
+	@echo "  make gen            - Generate Go+Java (inside Docker)"
+	@echo "  make gen-changed    - Generate only changed services (inside Docker)"
+	@echo "  make release        - CI release (tag + publish) (inside Docker)"
+	@echo "  make docker-shell   - Open a bash shell in the container"
+
+docker-build:
+	@$(DOCKER_COMPOSE) build
+
+docker-shell:
+	@$(RUN_IDL) bash
+
+# ===== Developer commands (run inside Docker) =====
 gen:
-	@services="$$(./scripts/list_services.sh)"; \
-	if [[ -z "$$services" ]]; then echo "No services found under proto/services"; exit 0; fi; \
-	for s in $$services; do \
-	  echo "GEN $$s"; \
-	  ./scripts/gen_go.sh "$$s"; \
-	  ./scripts/gen_java.sh "$$s"; \
-	done
+	@$(RUN_IDL) bash -lc "chmod +x scripts/*.sh && ./scripts/make_gen_all.sh"
 
 gen-changed:
-	@files="$$(git diff --name-only HEAD || true)"; \
-	services="$$(echo "$$files" | awk -F'/' '$$1=="proto" && $$2=="services"{print $$3} $$1=="gen" && $$3=="apis" && $$4=="v1"{print $$5}' | sort -u)"; \
-	if [[ -z "$$services" ]]; then echo "No local changes detected. Running gen for ALL."; $(MAKE) gen; exit 0; fi; \
-	for s in $$services; do \
-	  echo "GEN $$s"; \
-	  ./scripts/gen_go.sh "$$s"; \
-	  ./scripts/gen_java.sh "$$s"; \
-	done
+	@$(RUN_IDL) bash -lc "chmod +x scripts/*.sh && ./scripts/make_gen_changed.sh"
+
+# ===== CI command (run inside Docker) =====
+release:
+	@$(RUN_IDL) bash -lc "chmod +x scripts/*.sh && ./scripts/ci_release.sh"

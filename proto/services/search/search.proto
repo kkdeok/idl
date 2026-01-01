@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package apis.v1.search;
 
-option java_package = "com.nextsecurities.idl.apis.v1.search";
+option java_package = "com.kkdeok.idl.apis.v1.search";
 option java_multiple_files = true;
 option java_outer_classname = "SearchProto";
 

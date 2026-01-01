@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  idl:
+    platform: linux/amd64
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: idl-dev:latest
+    working_dir: /workspace
+    volumes:
+      - ..:/workspace
+    tty: true

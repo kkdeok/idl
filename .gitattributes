@@ -1,0 +1,5 @@
+# Generated code: hide noise in PRs
+gen/** linguist-generated=true
+
+# Keep proto as human-reviewed source
+proto/** linguist-generated=false

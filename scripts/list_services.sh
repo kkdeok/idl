@@ -8,4 +8,6 @@ if [[ ! -d "${SERV_DIR}" ]]; then
   exit 0
 fi
 
-find "${SERV_DIR}" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | sort
+find "${SERV_DIR}" -maxdepth 1 -mindepth 1 -type d \
+  | sed 's|.*/||' \
+  | sort

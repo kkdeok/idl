@@ -1,3 +1,5 @@
+: "${GITHUB_TOKEN:?GITHUB_TOKEN is required for pushing tags}"
+
 #!/usr/bin/env bash
 set -euo pipefail
 
