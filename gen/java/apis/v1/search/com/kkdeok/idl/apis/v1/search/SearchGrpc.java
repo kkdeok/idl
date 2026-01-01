@@ -46,6 +46,37 @@ public final class SearchGrpc {
     return getSearchMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.kkdeok.idl.apis.v1.search.SearchRequest,
+      com.kkdeok.idl.apis.v1.search.SearchResponse> getHelloMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "Hello",
+      requestType = com.kkdeok.idl.apis.v1.search.SearchRequest.class,
+      responseType = com.kkdeok.idl.apis.v1.search.SearchResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.kkdeok.idl.apis.v1.search.SearchRequest,
+      com.kkdeok.idl.apis.v1.search.SearchResponse> getHelloMethod() {
+    io.grpc.MethodDescriptor<com.kkdeok.idl.apis.v1.search.SearchRequest, com.kkdeok.idl.apis.v1.search.SearchResponse> getHelloMethod;
+    if ((getHelloMethod = SearchGrpc.getHelloMethod) == null) {
+      synchronized (SearchGrpc.class) {
+        if ((getHelloMethod = SearchGrpc.getHelloMethod) == null) {
+          SearchGrpc.getHelloMethod = getHelloMethod =
+              io.grpc.MethodDescriptor.<com.kkdeok.idl.apis.v1.search.SearchRequest, com.kkdeok.idl.apis.v1.search.SearchResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Hello"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.kkdeok.idl.apis.v1.search.SearchRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.kkdeok.idl.apis.v1.search.SearchResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SearchMethodDescriptorSupplier("Hello"))
+              .build();
+        }
+      }
+    }
+    return getHelloMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -100,6 +131,13 @@ public final class SearchGrpc {
         io.grpc.stub.StreamObserver<com.kkdeok.idl.apis.v1.search.SearchResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSearchMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void hello(com.kkdeok.idl.apis.v1.search.SearchRequest request,
+        io.grpc.stub.StreamObserver<com.kkdeok.idl.apis.v1.search.SearchResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getHelloMethod(), responseObserver);
+    }
   }
 
   /**
@@ -136,6 +174,14 @@ public final class SearchGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getSearchMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void hello(com.kkdeok.idl.apis.v1.search.SearchRequest request,
+        io.grpc.stub.StreamObserver<com.kkdeok.idl.apis.v1.search.SearchResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getHelloMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -159,6 +205,13 @@ public final class SearchGrpc {
     public com.kkdeok.idl.apis.v1.search.SearchResponse search(com.kkdeok.idl.apis.v1.search.SearchRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getSearchMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.kkdeok.idl.apis.v1.search.SearchResponse hello(com.kkdeok.idl.apis.v1.search.SearchRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getHelloMethod(), getCallOptions(), request);
     }
   }
 
@@ -185,9 +238,18 @@ public final class SearchGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getSearchMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.kkdeok.idl.apis.v1.search.SearchResponse> hello(
+        com.kkdeok.idl.apis.v1.search.SearchRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getHelloMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SEARCH = 0;
+  private static final int METHODID_HELLO = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -208,6 +270,10 @@ public final class SearchGrpc {
       switch (methodId) {
         case METHODID_SEARCH:
           serviceImpl.search((com.kkdeok.idl.apis.v1.search.SearchRequest) request,
+              (io.grpc.stub.StreamObserver<com.kkdeok.idl.apis.v1.search.SearchResponse>) responseObserver);
+          break;
+        case METHODID_HELLO:
+          serviceImpl.hello((com.kkdeok.idl.apis.v1.search.SearchRequest) request,
               (io.grpc.stub.StreamObserver<com.kkdeok.idl.apis.v1.search.SearchResponse>) responseObserver);
           break;
         default:
@@ -235,6 +301,13 @@ public final class SearchGrpc {
               com.kkdeok.idl.apis.v1.search.SearchRequest,
               com.kkdeok.idl.apis.v1.search.SearchResponse>(
                 service, METHODID_SEARCH)))
+        .addMethod(
+          getHelloMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.kkdeok.idl.apis.v1.search.SearchRequest,
+              com.kkdeok.idl.apis.v1.search.SearchResponse>(
+                service, METHODID_HELLO)))
         .build();
   }
 
@@ -284,6 +357,7 @@ public final class SearchGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new SearchFileDescriptorSupplier())
               .addMethod(getSearchMethod())
+              .addMethod(getHelloMethod())
               .build();
         }
       }

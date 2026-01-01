@@ -35,11 +35,13 @@ public final class SearchProto {
     java.lang.String[] descriptorData = {
       "\n\034services/search/search.proto\022\016apis.v1." +
       "search\"\036\n\rSearchRequest\022\r\n\005query\030\001 \001(\t\"\036" +
-      "\n\016SearchResponse\022\014\n\004hits\030\001 \003(\t2Q\n\006Search" +
-      "\022G\n\006Search\022\035.apis.v1.search.SearchReques" +
-      "t\032\036.apis.v1.search.SearchResponseBL\n\035com" +
-      ".kkdeok.idl.apis.v1.searchB\013SearchProtoP" +
-      "\001Z\034gen/go/apis/v1/search;searchb\006proto3"
+      "\n\016SearchResponse\022\014\n\004hits\030\001 \003(\t2\231\001\n\006Searc" +
+      "h\022G\n\006Search\022\035.apis.v1.search.SearchReque" +
+      "st\032\036.apis.v1.search.SearchResponse\022F\n\005He" +
+      "llo\022\035.apis.v1.search.SearchRequest\032\036.api" +
+      "s.v1.search.SearchResponseBL\n\035com.kkdeok" +
+      ".idl.apis.v1.searchB\013SearchProtoP\001Z\034gen/" +
+      "go/apis/v1/search;searchb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

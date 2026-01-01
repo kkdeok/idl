@@ -67,23 +67,51 @@ make docker-build
 
 This command builds a development environment image using `docker/Dockerfile`. The image includes all necessary tools such as protoc, Go, Java, and Maven.
 
-### 2. Generate code for all services
+### 2. Generate code
+
+#### Generate code for changed services only (default)
 
 ```bash
 make gen
 ```
 
-Generates Go and Java code for all services. The generated code is stored in the `gen/` directory.
+This command detects changed services by comparing proto and gen directories with the previous commit, and generates Go and Java code only for those services.
 
-### 3. Generate code for changed services only
-
-After modifying proto files, regenerate code only for changed services:
+#### Generate code for all services
 
 ```bash
-make gen-changed
+make gen-all
 ```
 
-This command uses Git to detect changed services and generates code only for those services.
+Generates Go and Java code for all services. The generated code is stored in the `gen/` directory.
+
+### 3. Publish services (Release)
+
+#### Publish changed services only (default)
+
+```bash
+export GITHUB_TOKEN="your_github_token"
+export GITHUB_REPOSITORY="your_username/idl"  # 예: kkdeok/idl
+make publish
+```
+
+This command:
+- Detects changed services by comparing proto and gen directories with the previous commit
+- Creates and pushes git tags for Go packages (format: `{service}-v{version}`)
+- Publishes Java packages to GitHub Packages
+
+#### Publish all services
+
+```bash
+export GITHUB_TOKEN="your_github_token"
+export GITHUB_REPOSITORY="your_username/idl"
+make publish-all
+```
+
+**Note:** 
+- `GITHUB_TOKEN` is required for pushing tags and publishing to GitHub Packages
+- You can create a Personal Access Token (PAT) with `repo` and `write:packages` permissions
+- `GITHUB_REPOSITORY` should be in the format `owner/repo` (e.g., `kkdeok/idl`)
 
 ### 4. Work directly in Docker container
 
@@ -93,15 +121,7 @@ To run commands directly inside the container:
 make docker-shell
 ```
 
-Inside the container, you can run scripts directly such as `./scripts/gen_go.sh <service>` or `./scripts/gen_java.sh <service>`.
-
-### 5. List available services
-
-```bash
-make docker-shell
-# Inside the container
-./scripts/list_services.sh
-```
+Inside the container, you can run scripts directly such as `./scripts/gen_go.sh` or `./scripts/gen_java.sh`.
 
 ## Adding a New Service
 
@@ -184,6 +204,47 @@ request := &search.SearchRequest{
     Query: "test",
 }
 ```
+
+## Local Development Workflow
+
+### Complete workflow: Generate and Publish
+
+1. **Build Docker image** (first time only)
+   ```bash
+   make docker-build
+   ```
+
+2. **Modify proto files** in `proto/services/{service}/`
+
+3. **Generate code** for changed services
+   ```bash
+   make gen
+   ```
+   Or generate for all services:
+   ```bash
+   make gen-all
+   ```
+
+4. **Commit and push changes**
+   ```bash
+   git add .
+   git commit -m "Update proto files"
+   git push
+   ```
+
+5. **Publish** changed services (requires GitHub token)
+   ```bash
+   export GITHUB_TOKEN="your_github_token"
+   export GITHUB_REPOSITORY="your_username/idl"
+   make publish
+   ```
+
+### Environment Variables for Publishing
+
+- `GITHUB_TOKEN`: GitHub Personal Access Token with `repo` and `write:packages` permissions
+- `GITHUB_REPOSITORY`: Repository in format `owner/repo` (e.g., `kkdeok/idl`)
+- `BASE_SHA` (optional): Base commit SHA for comparison (defaults to previous commit)
+- `HEAD_SHA` (optional): Head commit SHA for comparison (defaults to `HEAD`)
 
 ## CI/CD
 

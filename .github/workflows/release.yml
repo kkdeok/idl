@@ -12,53 +12,54 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (full history for tags)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
-          sparse-checkout: false
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Release (Docker)
+      - name: Build Docker image
+        run: |
+          docker compose -f docker/docker-compose.yml build
+
+      - name: Generate code
+        run: |
+          docker compose -f docker/docker-compose.yml run --rm idl \
+            bash -c "chmod +x scripts/*.sh && make gen"
+
+      - name: Publish all services
         env:
-          BASE_SHA: ${{ github.event.before }}
-          HEAD_SHA: ${{ github.sha }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
         run: |
-          # 현재 디렉토리 확인 (디버깅)
-          pwd
-          ls -la docker/docker-compose.yml || (echo "File not found. Listing docker directory:" && ls -la docker/ || echo "docker directory not found")
-          
-          # git tagging/push needs auth
+          # Git 설정
           git config user.name "idl-ci"
           git config user.email "idl-ci@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
-          # Maven auth for GitHub Packages (컨테이너 안에서 사용)
+          # Maven 인증 설정
           mkdir -p .m2
           cat > .m2/settings.xml <<EOF
           <settings>
             <servers>
               <server>
                 <id>github</id>
-                <username>${{ github.actor }}</username>
+                <username>${GITHUB_ACTOR}</username>
                 <password>${GITHUB_TOKEN}</password>
               </server>
             </servers>
           </settings>
           EOF
 
-          # Run release fully inside Docker
-          docker compose -f docker/docker-compose.yml build
+          # Docker 컨테이너에서 publish-all 실행
           docker compose -f docker/docker-compose.yml run --rm \
-            -e BASE_SHA="${BASE_SHA}" \
-            -e HEAD_SHA="${HEAD_SHA}" \
             -e GITHUB_REPOSITORY="${GITHUB_REPOSITORY}" \
             -e GITHUB_TOKEN="${GITHUB_TOKEN}" \
+            -e GITHUB_ACTOR="${GITHUB_ACTOR}" \
             -v "${PWD}/.m2:/root/.m2" \
             idl \
-            bash -c "cd /workspace && chmod +x scripts/*.sh && ./scripts/ci_release.sh"
+            bash -c "chmod +x scripts/*.sh && make publish-all"

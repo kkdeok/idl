@@ -11,6 +11,7 @@ option go_package = "gen/go/apis/v1/search;search";
 
 service Search {
   rpc Search(SearchRequest) returns (SearchResponse);
+  rpc Hello(SearchRequest) returns (SearchResponse);
 }
 
 message SearchRequest {
