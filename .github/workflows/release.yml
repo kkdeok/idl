@@ -28,8 +28,9 @@ jobs:
           HEAD_SHA: ${{ github.sha }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ${{ github.workspace }}
         run: |
+          cd "${{ github.workspace }}"
+          
           # git tagging/push needs auth
           git config user.name "idl-ci"
           git config user.email "idl-ci@users.noreply.github.com"
