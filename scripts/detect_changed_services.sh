@@ -15,7 +15,14 @@ if [[ "${BASE_SHA}" =~ ^0+$ ]]; then
   exit 0
 fi
 
-CHANGED="$(git diff --name-only "${BASE_SHA}" "${HEAD_SHA}" || true)"
+# BASE_SHA가 유효한 commit인지 확인
+if ! git rev-parse --verify "${BASE_SHA}" >/dev/null 2>&1; then
+  echo "WARNING: BASE_SHA '${BASE_SHA}' is not a valid commit. Treating as first push." >&2
+  ./scripts/list_services.sh
+  exit 0
+fi
+
+CHANGED="$(git diff --name-only "${BASE_SHA}" "${HEAD_SHA}" 2>&1 || true)"
 
 # 허용 패턴:
 # - proto/services/{svc}/...
