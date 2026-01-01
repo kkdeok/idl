@@ -15,6 +15,13 @@ if [[ "${BASE_SHA}" =~ ^0+$ ]]; then
   exit 0
 fi
 
+# git repository인지 먼저 확인
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "WARNING: not inside a git repository. Treating as first push." >&2
+  ./scripts/list_services.sh
+  exit 0
+fi
+
 # BASE_SHA가 유효한 commit인지 확인
 if ! git rev-parse --verify "${BASE_SHA}" >/dev/null 2>&1; then
   echo "WARNING: BASE_SHA '${BASE_SHA}' is not a valid commit. Treating as first push." >&2

@@ -12,6 +12,11 @@ if [[ -z "${BASE_SHA}" || -z "${HEAD_SHA}" || -z "${GITHUB_REPOSITORY}" ]]; then
   exit 1
 fi
 
+# 컨테이너 안에서 git 설정 (워크플로우에서 이미 설정했지만 컨테이너 안에서는 별도 설정 필요)
+git config user.name "idl-ci" || true
+git config user.email "idl-ci@users.noreply.github.com" || true
+git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" || true
+
 SERVICES="$(BASE_SHA="${BASE_SHA}" HEAD_SHA="${HEAD_SHA}" ./scripts/detect_changed_services.sh || true)"
 if [[ -z "${SERVICES}" ]]; then
   echo "No changed services. Skip."
