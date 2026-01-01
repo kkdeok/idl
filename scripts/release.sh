@@ -37,8 +37,8 @@ list_all_services() {
 }
 
 # 컨테이너 안에서 git 설정
-git config user.name "idl-ci" || true
-git config user.email "idl-ci@users.noreply.github.com" || true
+git config user.name "kkdeok" || true
+git config user.email "kkdeok26@gmail.com" || true
 git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" || true
 
 # 변경된 서비스 목록 가져오기
