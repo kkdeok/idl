@@ -26,7 +26,19 @@ gen:
 
 # ===== CI command (run inside Docker) =====
 publish:
-	@$(RUN_IDL) bash -lc "chmod +x scripts/*.sh && ./scripts/publish.sh"
+	@$(DOCKER_COMPOSE) run --rm \
+		-e GITHUB_TOKEN="$(GITHUB_TOKEN)" \
+		-e GITHUB_REPOSITORY="$(GITHUB_REPOSITORY)" \
+		-e GITHUB_ACTOR="$(GITHUB_ACTOR)" \
+		-e BASE_SHA="$(BASE_SHA)" \
+		-e HEAD_SHA="$(HEAD_SHA)" \
+		idl bash -lc "chmod +x scripts/*.sh && ./scripts/publish.sh"
 
 publish-all:
-	@$(RUN_IDL) bash -lc "chmod +x scripts/*.sh && ./scripts/publish.sh --all"
+	@$(DOCKER_COMPOSE) run --rm \
+		-e GITHUB_TOKEN="$(GITHUB_TOKEN)" \
+		-e GITHUB_REPOSITORY="$(GITHUB_REPOSITORY)" \
+		-e GITHUB_ACTOR="$(GITHUB_ACTOR)" \
+		-e BASE_SHA="$(BASE_SHA)" \
+		-e HEAD_SHA="$(HEAD_SHA)" \
+		idl bash -lc "chmod +x scripts/*.sh && ./scripts/publish.sh --all"

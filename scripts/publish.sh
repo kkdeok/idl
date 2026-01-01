@@ -23,6 +23,13 @@ fi
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROTO_ROOT="${ROOT_DIR}/proto"
 
+# print env
+echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+echo "GITHUB_TOKEN: ${GITHUB_TOKEN}"
+echo "BASE_SHA: ${BASE_SHA}"
+echo "HEAD_SHA: ${HEAD_SHA}"
+
 # --all 플래그 확인
 ALL_FLAG=false
 if [[ "${1:-}" == "--all" ]]; then
