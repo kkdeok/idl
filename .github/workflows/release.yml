@@ -1,0 +1,78 @@
+name: release
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history for tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.x"
+
+      - name: Install protoc + Maven
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler maven
+
+      - name: Install Go protoc plugins
+        run: |
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.4.0
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+
+      - name: Install protoc-gen-grpc-java
+        run: |
+          GRPC_JAVA_VER="1.68.0"
+          curl -sSL -o /usr/local/bin/protoc-gen-grpc-java \
+            "https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/${GRPC_JAVA_VER}/protoc-gen-grpc-java-${GRPC_JAVA_VER}-linux-x86_64.exe"
+          chmod +x /usr/local/bin/protoc-gen-grpc-java
+          echo "GRPC_JAVA_PLUGIN=/usr/local/bin/protoc-gen-grpc-java" >> $GITHUB_ENV
+
+      - name: Configure Maven settings for GitHub Packages
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>${{ github.actor }}</username>
+                <password>${{ secrets.GITHUB_TOKEN }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Configure git for tagging
+        run: |
+          git config user.name "idl-ci"
+          git config user.email "idl-ci@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+
+      - name: Release changed services (tag + publish)
+        env:
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/ci_release.sh
