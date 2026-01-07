@@ -1,10 +1,10 @@
 services:
-  idl:
+  idl-helper:
     platform: linux/amd64
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: idl-dev:latest
+    image: idl-helper:latest
     working_dir: /workspace
     volumes:
       - ..:/workspace

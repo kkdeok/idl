@@ -1,17 +1,16 @@
 syntax = "proto3";
 
-package apis.v1.search;
+package apis.search.v1;
 
-option java_package = "com.kkdeok.idl.apis.v1.search";
+option java_package = "com.kkdeok.idl.apis.search.v1";
 option java_multiple_files = true;
 option java_outer_classname = "SearchProto";
 
 // gen/go 아래로 "직접" 떨어지게 하는 핵심
-option go_package = "gen/go/apis/v1/search;search";
+option go_package = "github.com/kkdeok/idl/gen/go/apis/search/v1;searchv1";
 
-service Search {
+service SearchService {
   rpc Search(SearchRequest) returns (SearchResponse);
-  rpc Hello(SearchRequest) returns (SearchResponse);
 }
 
 message SearchRequest {
